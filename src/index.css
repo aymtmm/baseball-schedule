@@ -1,0 +1,87 @@
+:root {
+  /* ===== テーマカラー ===== */
+  --base-bg: #f5f5f5;          /* 背景ベース */
+  --primary-color: #1a73e8;    /* アクセント色 */
+  --primary-hover: #155bb5;
+  --favorite-color: #FFE082;   /* お気に入り */
+  --attended-color: #A5D6A7;   /* 観戦済み */
+  --default-color: #90CAF9;    /* デフォルト */
+  --text-color: #000;          /* 文字色 */
+  --sub-text-color: #555;      /* サブ文字色 */
+}
+
+/* ===== カレンダー全体 ===== */
+.calendar-container {
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 16px;
+  background: var(--base-bg);
+  color: var(--text-color);
+}
+
+/* カレンダーヘッダーのボタン横並び修正 */
+.fc .fc-toolbar-chunk {
+  display: flex !important;
+  align-items: center;
+}
+.fc .fc-button {
+  margin-right: 8px;
+}
+.fc .fc-toolbar-title {
+  margin: 0 12px;
+}
+
+/* カレンダーイベントカード色統一 */
+.fc-event {
+  color: var(--text-color);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+.fc-event.default { background-color: var(--default-color); border-color: #555; }
+.fc-event.favorite { background-color: var(--favorite-color); border-color: #FFB300; }
+.fc-event.attended { background-color: var(--attended-color); border-color: #388E3C; }
+
+/* ===== 一覧カード ===== */
+.list-card {
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  border-left: 4px solid #B0BEC5;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: transform 0.1s;
+}
+.list-card:hover { transform: translateY(-2px); }
+.list-card-title { font-weight: bold; margin-bottom: 4px; }
+.list-card-sub { font-size: 12px; color: var(--sub-text-color); }
+.list-card-total { font-size: 12px; color: var(--text-color); }
+
+/* 色分け */
+.list-card.favorite { background-color: var(--favorite-color); border-left-color: #FFB300; }
+.list-card.attended { background-color: var(--attended-color); border-left-color: #388E3C; }
+.list-card.default { background-color: var(--default-color); border-left-color: #B0BEC5; }
+
+/* ===== タブバー（スマホ対応） ===== */
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  border-top: 1px solid #ccc;
+  background-color: var(--base-bg);
+}
+.tab-bar button {
+  flex: 1;
+  padding: 12px 0;
+  font-weight: bold;
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+}
+.tab-bar button.active {
+  background-color: var(--primary-color);
+  color: #fff;
+}
