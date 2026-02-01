@@ -1,14 +1,16 @@
 import { useState } from "react";
 import CalenderPage from "./pages/CalenderPage";
 import ListPage from "./pages/ListPage";
+import TicketSalesPage from "./pages/TicketSalesPage";
 
 export default function App() {
     const [currentTab, setCurrentTab] = useState("calendar");
 
     return (
         <div style={{ paddingBottom: "60px" }}> {/* タブ分の余白を確保 */}
-            {currentTab === "calendar" && <CalenderPage />}
+            {currentTab === "calendar" && <CalenderPage setCurrentTab={setCurrentTab} />}
             {currentTab === "list" && <ListPage />}
+            {currentTab === "tickets" && <TicketSalesPage />}
 
             {/* 下タブバー */}
             <div style={{
@@ -45,6 +47,18 @@ export default function App() {
                     onClick={() => setCurrentTab("list")}
                 >
                     一覧
+                </button>
+                <button
+                    style={{
+                        flex: 1,
+                        fontWeight: currentTab === "tickets" ? "bold" : "normal",
+                        background: currentTab === "tickets" ? "#d1eaff" : "transparent", // 選択中色
+                        border: "none",
+                        cursor: "pointer"
+                    }}
+                    onClick={() => setCurrentTab("tickets")}
+                >
+                    🎫 発売日
                 </button>
             </div>
         </div>

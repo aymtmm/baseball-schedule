@@ -59,12 +59,25 @@ function GameModal({
                 }}
             >
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <h2 style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                    <h2 style={{ display: "flex", gap: 10, alignItems: "center", margin: 0 }}>
                         <TeamBadge team={ep.home} size={26} fontSize={17} />
                         <span>vs</span>
                         <TeamBadge team={ep.away} size={26} fontSize={17} />
                     </h2>
-                    <button onClick={onClose}>×</button>
+                    <button
+                        onClick={onClose}
+                        style={{
+                            width: 28,
+                            height: 28,
+                            padding: 0,
+                            border: "none",
+                            background: "transparent",
+                            cursor: "pointer",
+                            fontSize: 18
+                        }}
+                    >
+                        ×
+                    </button>
                 </div>
 
                 <strong>{event.date ? formatDate(event.date) : ""} {ep.startTime}</strong>
@@ -89,6 +102,18 @@ function GameModal({
                         />
                         ✅ 観戦済み
                     </label>
+                </div>
+
+                {/* チケット発売日 */}
+                <div className="form-row">
+                    <div className="form-label">🎫 チケット発売日</div>
+                    <input
+                        key={`ticket-${event.id}-${ep.ticketStartDate || 'empty'}`}
+                        type="date"
+                        value={ep.ticketStartDate || ""}
+                        onChange={e => update("ticketStartDate", e.target.value)}
+                        className="money-input"
+                    />
                 </div>
 
                 {/* 観戦済みのみ表示 */}
