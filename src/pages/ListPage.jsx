@@ -135,6 +135,44 @@ export default function ListPage() {
         return map;
     }, [visibleEvents]);
 
+    /* ===== 月別カテゴリ別サマリー ===== */
+    const monthlyDetailSummary = useMemo(() => {
+        const map = {}; // month => { ticket, beer, food, goods, travel, total }
+
+        visibleEvents.forEach(ev => {
+            const month = getMonthKey(ev.date);
+            if (!map[month]) {
+                map[month] = { ticket: 0, beer: 0, food: 0, goods: 0, travel: 0, total: 0 };
+            }
+            const cost = ev.extendedProps.cost;
+            map[month].ticket += parseNumber(cost.ticket);
+            map[month].beer += parseNumber(cost.beerCost);
+            map[month].food += parseNumber(cost.ballparkFood);
+            map[month].goods += parseNumber(cost.goods);
+            map[month].travel += parseNumber(cost.travelCost);
+            map[month].total += getEventTotal(ev);
+        });
+
+        return map;
+    }, [visibleEvents]);
+
+    /* ===== トータルカテゴリ別サマリー ===== */
+    const totalCategorySummary = useMemo(() => {
+        let total = { ticket: 0, beer: 0, food: 0, goods: 0, travel: 0, total: 0 };
+
+        visibleEvents.forEach(ev => {
+            const cost = ev.extendedProps.cost;
+            total.ticket += parseNumber(cost.ticket);
+            total.beer += parseNumber(cost.beerCost);
+            total.food += parseNumber(cost.ballparkFood);
+            total.goods += parseNumber(cost.goods);
+            total.travel += parseNumber(cost.travelCost);
+            total.total += getEventTotal(ev);
+        });
+
+        return total;
+    }, [visibleEvents]);
+
     return (
         <div className="page-container">
             <h2 className="page-title">📋 観戦・お気に入り一覧</h2>
@@ -196,16 +234,41 @@ export default function ListPage() {
                 ))}
             </div>
 
-            {/* ===== 月別サマリー ===== */}
+            {/* ===== 月別・カテゴリ別支出サマリー ===== */}
             <div className="monthly-summary">
                 <h3>💰 月別支出</h3>
-                {Object.entries(monthlySummary)
+                {Object.entries(monthlyDetailSummary)
                     .sort((a, b) => parseMonthKeyToDate(a[0]) - parseMonthKeyToDate(b[0]))
-                    .map(([month, total]) => (
-                    <div key={month}>
-                        {formatMonthTitle(month)}：{total.toLocaleString()} 円
+                    .map(([month, detail]) => (
+                    <div key={month} style={{ marginBottom: 12, paddingBottom: 8, borderBottom: '1px solid #e0e0e0' }}>
+                        <div style={{ fontWeight: 'bold', marginBottom: 4 }}>
+                            {formatMonthTitle(month)}：{detail.total.toLocaleString()} 円
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#666', marginLeft: 12 }}>
+                            {detail.ticket > 0 && <div>🎫 チケット：{detail.ticket.toLocaleString()} 円</div>}
+                            {detail.beer > 0 && <div>🍺 ビール：{detail.beer.toLocaleString()} 円</div>}
+                            {detail.food > 0 && <div>🍔 球場飯：{detail.food.toLocaleString()} 円</div>}
+                            {detail.goods > 0 && <div>🎁 グッズ：{detail.goods.toLocaleString()} 円</div>}
+                            {detail.travel > 0 && <div>🚄 遠征費：{detail.travel.toLocaleString()} 円</div>}
+                        </div>
                     </div>
                 ))}
+                
+                {/* トータルサマリー */}
+                {visibleEvents.length > 0 && (
+                    <div style={{ marginTop: 16, paddingTop: 12, borderTop: '2px solid #333' }}>
+                        <div style={{ fontWeight: 'bold', fontSize: '16px', marginBottom: 8 }}>
+                            合計：{totalCategorySummary.total.toLocaleString()} 円
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#666', marginLeft: 12 }}>
+                            {totalCategorySummary.ticket > 0 && <div>🎫 チケット：{totalCategorySummary.ticket.toLocaleString()} 円</div>}
+                            {totalCategorySummary.beer > 0 && <div>🍺 ビール：{totalCategorySummary.beer.toLocaleString()} 円</div>}
+                            {totalCategorySummary.food > 0 && <div>🍔 球場飯：{totalCategorySummary.food.toLocaleString()} 円</div>}
+                            {totalCategorySummary.goods > 0 && <div>🎁 グッズ：{totalCategorySummary.goods.toLocaleString()} 円</div>}
+                            {totalCategorySummary.travel > 0 && <div>🚄 遠征費：{totalCategorySummary.travel.toLocaleString()} 円</div>}
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* ===== 一覧カード（選択: すべて => 月毎にグループ表示 / 月選択 => その月の一覧） ===== */}
