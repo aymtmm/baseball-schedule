@@ -37,6 +37,34 @@
   padding: 2em;
 }
 
+/* ページ内は左寄せが基本 */
+.page-container {
+  text-align: left;
+}
+
+/* フィルタ行を左揃え（ドロップダウン等） */
+.filter-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+/* 月別サマリーを左寄せ */
+.monthly-summary {
+  text-align: left;
+  margin: 12px 0;
+}
+
+/* 一覧カードも左寄せ */
+.list-card {
+  text-align: left;
+}
+
+/* セレクト系は左揃え */
+select, .team-select, .year-select { text-align: left; }
+
 .read-the-docs {
   color: #888;
 }
@@ -118,4 +146,60 @@
   .chip-container { padding: 6px 4px; }
   .chip { padding: 10px 12px; min-width: 96px; flex: 0 0 auto; }
   .preset-btn { padding: 8px 10px; font-size: 0.9rem; }
+}
+
+/* Calendar background styling */
+:root {
+  --calendar-bg: #f6fbff;
+}
+.page-container .fc {
+  background: var(--calendar-bg);
+  padding: 12px;
+  border-radius: 10px;
+}
+
+/* Slight inner panel for month grid to separate from page */
+.page-container .fc .fc-view {
+  background: transparent;
+}
+
+/* Ensure day cells are square-cornered and have subtle grid/border
+   so colored background doesn't merge visually with event cards. */
+.page-container .fc .fc-daygrid-day {
+  border-radius: 0 !important;
+  box-sizing: border-box;
+  border: 1px solid rgba(0,0,0,0.04);
+  overflow: visible;
+}
+
+/* When a day cell is colored (inline style), keep it subtle and
+   make event cards pop with shadow and border. */
+.page-container .fc .fc-daygrid-event {
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  border: 0.6px solid rgba(0,0,0,0.06) !important;
+  padding: 6px 8px;
+  background-clip: padding-box;
+  z-index: 3;
+}
+
+/* Slight inner spacing so event cards don't sit flush to cell edge */
+.page-container .fc .fc-daygrid-day-frame {
+  padding: 6px;
+}
+
+/* Ensure event elements render above colored day cells and are visually separated */
+.page-container .fc .fc-event,
+.page-container .fc .fc-event.main,
+.page-container .fc .fc-event-main {
+  border-radius: 8px;
+  border: 0.6px solid rgba(0,0,0,0.06) !important;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08) !important;
+  background-clip: padding-box;
+  z-index: 4 !important;
+}
+
+/* Smaller inner padding for the text inside FullCalendar event blocks */
+.page-container .fc .fc-event-main-frame, .page-container .fc .fc-event-main {
+  padding: 4px 6px !important;
 }

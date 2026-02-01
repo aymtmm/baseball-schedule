@@ -50,6 +50,7 @@ function GameModal({
                 style={{
                     background: getEventColor(event),
                     padding: "16px",
+                    textAlign: "left",
                     borderRadius: "12px",
                     width: "90%",
                     maxWidth: "420px",

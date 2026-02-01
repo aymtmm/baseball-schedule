@@ -152,6 +152,18 @@ export default function CalenderPage() {
                 </label>
             </div>
 
+            {/* 凡例 */}
+            <div className="filter-row legend-row" style={{ gap: 12, alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                    <span style={{ width: 12, height: 12, display: 'inline-block', background: '#A5D6A7', borderRadius: 2 }}></span>
+                    <small>観戦済み</small>
+                </div>
+                <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                    <span style={{ width: 12, height: 12, display: 'inline-block', background: '#FFE082', borderRadius: 2 }}></span>
+                    <small>お気に入り</small>
+                </div>
+            </div>
+
             <FullCalendar
                 plugins={[dayGridPlugin, interactionPlugin]}
                 initialView="dayGridMonth"
@@ -168,12 +180,38 @@ export default function CalenderPage() {
                     classNames: [
                         ev.extendedProps.attended ? "attended" :
                             ev.extendedProps.favorite ? "favorite" : "default"
-                    ]
+                    ],
+                    backgroundColor: getEventColor(ev),
+                    borderColor: getEventColor(ev),
+                    textColor: '#111'
                 }))}
                 eventContent={eventContent}
                 eventClick={(info) => setModalEventId(info.event.id)}
                 dayCellDidMount={(info) => {
                     const date = info.date;
+
+                    // 同日のイベントを全て検索（別球団のものも対象）
+                    const eventsOnDate = events.filter(ev => {
+                        const d = new Date(ev.date);
+                        return d.getFullYear() === date.getFullYear() &&
+                            d.getMonth() === date.getMonth() &&
+                            d.getDate() === date.getDate();
+                    });
+
+                    // 優先度: 観戦済み > お気に入り
+                    let dayColor = null;
+                    const attendedEv = eventsOnDate.find(ev => ev.extendedProps && ev.extendedProps.attended);
+                    const favoriteEv = eventsOnDate.find(ev => ev.extendedProps && ev.extendedProps.favorite);
+
+                    if (attendedEv) dayColor = getEventColor(attendedEv);
+                    else if (favoriteEv) dayColor = getEventColor(favoriteEv);
+
+                    if (dayColor) {
+                        info.el.style.backgroundColor = dayColor;
+                        return;
+                    }
+
+                    // 既存の週末/祝日カラー（イベント色がない場合のみ適用）
                     const day = date.getDay();
                     const holidayFlag = isHoliday(date);
                     if (day === 6) info.el.style.backgroundColor = "#E3F2FD";
