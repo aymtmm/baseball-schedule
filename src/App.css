@@ -203,3 +203,80 @@ select, .team-select, .year-select { text-align: left; }
 .page-container .fc .fc-event-main-frame, .page-container .fc .fc-event-main {
   padding: 4px 6px !important;
 }
+
+/* Mobile-first UI tweaks */
+.page-title {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.form-row label { font-weight: 600; }
+
+input[type="text"], input[type="date"], input[type="number"], select, .money-input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #e6eef9;
+  box-sizing: border-box;
+}
+
+/* inline form field (label + input unit on same row) */
+.form-field.inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+button {
+  font-size: 16px;
+  padding: 10px 14px;
+  border-radius: 10px;
+}
+
+/* Primary button style */
+.primary-btn {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+}
+
+/* Ticket card styling */
+.ticket-card {
+  background: #fff9e6;
+  border: 1px solid #ffe082;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+.ticket-card .ticket-card-title { font-weight: 700; margin-bottom: 6px; }
+.ticket-card .ticket-card-meta { font-size: 13px; color: #666; margin-bottom: 8px; }
+.ticket-delete-btn {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Modal tweaks */
+.page-container > div[style] {
+  /* preserve modal inner styles; keep them responsive */
+}
+
+@media (max-width: 600px) {
+  #root { padding: 12px; }
+  .page-container { padding: 8px; }
+  .chip { font-size: 0.98rem; }
+  .page-container .fc .fc-daygrid-day { min-height: 88px; }
+  .form-row { gap: 8px; }
+  button { width: 100%; }
+  .preset-container { flex-wrap: wrap; }
+}

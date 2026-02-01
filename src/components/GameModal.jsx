@@ -166,16 +166,18 @@ function GameModal({
                         {/* 先発 */}
                         <div className="form-row">
                             <div className="form-label">🎯 先発</div>
-                            <div className="form-field column">
+                            <div className="form-field inline">
                                 <input
                                     placeholder="ホーム"
                                     value={ep.startingPitcher.home}
                                     onChange={e => update("startingPitcher.home", e.target.value)}
+                                    className="money-input"
                                 />
                                 <input
                                     placeholder="ビジター"
                                     value={ep.startingPitcher.away}
                                     onChange={e => update("startingPitcher.away", e.target.value)}
+                                    className="money-input"
                                 />
                             </div>
                         </div>
@@ -186,6 +188,7 @@ function GameModal({
                             <input
                                 value={ep.memo}
                                 onChange={e => update("memo", e.target.value)}
+                                className="money-input"
                             />
                         </div>
 

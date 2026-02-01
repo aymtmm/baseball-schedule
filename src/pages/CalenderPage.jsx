@@ -354,6 +354,30 @@ export default function CalenderPage({ setCurrentTab }) {
                     const holidayFlag = isHoliday(date);
                     if (day === 6) info.el.style.backgroundColor = "#E3F2FD";
                     else if (day === 0 || holidayFlag) info.el.style.backgroundColor = "#FFCDD2";
+                    // 長押しでチケット発売日ショートカット（モバイル向け）
+                    let longPressTimer = null;
+                    const dateStr = info.date.toISOString().split('T')[0];
+                    const start = (e) => {
+                        // prevent context menu on long press
+                        if (e && e.preventDefault) e.preventDefault();
+                        longPressTimer = setTimeout(() => {
+                            // set prefill and navigate to ticket tab
+                            try {
+                                localStorage.setItem('ticket-new-prefill', dateStr);
+                                if (setCurrentTab) setCurrentTab('tickets');
+                            } catch (err) {
+                                console.error(err);
+                            }
+                        }, 700);
+                    };
+                    const cancel = () => { if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; } };
+
+                    info.el.addEventListener('pointerdown', start);
+                    info.el.addEventListener('touchstart', start);
+                    info.el.addEventListener('pointerup', cancel);
+                    info.el.addEventListener('pointerleave', cancel);
+                    info.el.addEventListener('touchend', cancel);
+                    info.el.addEventListener('touchcancel', cancel);
                 }}
                 dayCellContent={(args) => args.dayNumberText.replace("日", "")}
             />
