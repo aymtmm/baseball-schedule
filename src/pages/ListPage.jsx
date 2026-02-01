@@ -278,7 +278,9 @@ export default function ListPage() {
                     <div>表示できる月がありません。</div>
                 ) : (
                     monthOptions.map((m) => {
-                        const eventsForMonth = visibleEvents.filter((ev) => getMonthKey(ev.date) === m);
+                        const eventsForMonth = visibleEvents
+                            .filter((ev) => getMonthKey(ev.date) === m)
+                            .sort((a, b) => new Date(a.date) - new Date(b.date));
                         if (eventsForMonth.length === 0) return null;
                         return (
                             <div key={m} className="month-group">
@@ -312,7 +314,9 @@ export default function ListPage() {
                 // 選択された月のみ表示（ヘッダ付き）
                 <div>
                     <h3 className="month-group-title">{formatMonthTitle(selectedMonth)}</h3>
-                    {visibleEvents.map((ev) => {
+                    {visibleEvents
+                        .sort((a, b) => new Date(a.date) - new Date(b.date))
+                        .map((ev) => {
                         let cardClass = "list-card";
                         if (ev.extendedProps.attended) {
                             cardClass += " attended";
