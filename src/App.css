@@ -40,3 +40,82 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Chip UI for month filter */
+.chip-container {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 8px 0;
+  align-items: center;
+}
+.chip {
+  appearance: none;
+  border: none;
+  background: #f2f4f7;
+  color: #111;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 0.95rem;
+}
+.chip:focus {
+  outline: 2px solid #8ab4ff;
+  outline-offset: 2px;
+}
+.chip.active {
+  background: #2563eb;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.18);
+}
+
+/* Preset buttons */
+.preset-container {
+  display: flex;
+  gap: 8px;
+  margin: 8px 0;
+}
+.preset-btn {
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  color: #111;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.preset-btn:hover { background: #f8fafc; }
+
+/* Tab-like appearance and mobile tweaks */
+.chip-container {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 8px 0;
+  align-items: center;
+  border-bottom: 1px solid #e6edf6;
+}
+.chip {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: #111;
+  padding: 8px 14px;
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 0.95rem;
+}
+.chip.active {
+  background: #fff;
+  color: #111;
+  border: 1px solid #e5e7eb;
+  border-bottom: 2px solid #2563eb;
+  box-shadow: 0 -2px 0 rgba(0,0,0,0.02) inset;
+}
+
+@media (max-width: 600px) {
+  .chip-container { padding: 6px 4px; }
+  .chip { padding: 10px 12px; min-width: 96px; flex: 0 0 auto; }
+  .preset-btn { padding: 8px 10px; font-size: 0.9rem; }
+}
