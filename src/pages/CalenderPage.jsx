@@ -41,6 +41,10 @@ const getEventTotal = (ev) => {
 const STORAGE_KEY_TICKETS = "ticket-sales";
 
 export default function CalenderPage({ setCurrentTab }) {
+        const [editTicketModal, setEditTicketModal] = useState(null);
+        const [filterGameDate, setFilterGameDate] = useState("");
+        const [editModalSaleDate, setEditModalSaleDate] = useState("");
+        const [editModalGameIds, setEditModalGameIds] = useState(new Set());
     const [events, setEvents] = useState([]);
     const [selectedTeam, setSelectedTeam] = useState("ソフトバンク");
     const [modalEventId, setModalEventId] = useState(null);
@@ -163,16 +167,16 @@ export default function CalenderPage({ setCurrentTab }) {
     const eventContent = (arg) => {
         const evId = arg.event.id;
         const isTicket = evId.startsWith("ticket-");
-        
         if (isTicket) {
-            const ticket = ticketSales.find(t => `ticket-${t.id}` === evId);
+            const ticket = ticketSales.find(t => `ticket-${t.saleDate}` === evId);
             return (
                 <div style={{
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
                     fontSize: 11,
-                    lineHeight: 1.25
+                    lineHeight: 1.25,
+                    pointerEvents: "auto"
                 }}>
                     <div>🎫 チケット発売</div>
                     {ticket && (
@@ -183,6 +187,7 @@ export default function CalenderPage({ setCurrentTab }) {
                 </div>
             );
         }
+        // ...通常イベント表示はそのまま...
 
         const ev = events.find(e => e.id === arg.event.id);
         if (!ev) return null;
@@ -223,7 +228,7 @@ export default function CalenderPage({ setCurrentTab }) {
     // 発売日イベントに変換
     const ticketSaleEvents = useMemo(() => {
         return ticketSales.map(ticket => ({
-            id: `ticket-${ticket.id}`,
+            id: `ticket-${ticket.saleDate}`,
             title: "🎫 チケット発売",
             date: ticket.saleDate,
             extendedProps: { 
@@ -313,11 +318,27 @@ export default function CalenderPage({ setCurrentTab }) {
                 }))}
                 eventContent={eventContent}
                 eventClick={(info) => {
+                    // デバッグ用: ticketの値を出力
                     const evId = info.event.id;
-                    if (!evId.startsWith("ticket-")) {
+                    if (evId.startsWith("ticket-")) {
+                        const saleDate = evId.replace("ticket-", "");
+                        const ticket = ticketSales.find(t => {
+                            const tDate = typeof t.saleDate === 'string' ? t.saleDate.slice(0,10) : new Date(t.saleDate).toISOString().slice(0,10);
+                            return tDate === saleDate;
+                        });
+                        console.log("[DEBUG] ticket", ticket);
+                        if (ticket) {
+                            setEditTicketModal(ticket);
+                            setEditModalSaleDate(ticket.saleDate);
+                            setEditModalGameIds(new Set(ticket.games || []));
+                            setFilterGameDate(ticket.saleDate);
+                            setTimeout(() => {
+                                console.log("[DEBUG] editTicketModal", ticket);
+                            }, 100);
+                        }
+                    } else {
                         setModalEventId(evId);
                     }
-                    // チケット発売イベントはクリックしても何もしない（将来的に詳細モーダル可能）
                 }}
                 dateClick={(info) => {
                     // セルクリックで「試合/発売日」選択モーダル
@@ -354,30 +375,41 @@ export default function CalenderPage({ setCurrentTab }) {
                     const holidayFlag = isHoliday(date);
                     if (day === 6) info.el.style.backgroundColor = "#E3F2FD";
                     else if (day === 0 || holidayFlag) info.el.style.backgroundColor = "#FFCDD2";
-                    // 長押しでチケット発売日ショートカット（モバイル向け）
-                    let longPressTimer = null;
-                    const dateStr = info.date.toISOString().split('T')[0];
-                    const start = (e) => {
-                        // prevent context menu on long press
-                        if (e && e.preventDefault) e.preventDefault();
-                        longPressTimer = setTimeout(() => {
-                            // set prefill and navigate to ticket tab
-                            try {
-                                localStorage.setItem('ticket-new-prefill', dateStr);
-                                if (setCurrentTab) setCurrentTab('tickets');
-                            } catch (err) {
-                                console.error(err);
-                            }
-                        }, 700);
-                    };
-                    const cancel = () => { if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; } };
-
-                    info.el.addEventListener('pointerdown', start);
-                    info.el.addEventListener('touchstart', start);
-                    info.el.addEventListener('pointerup', cancel);
-                    info.el.addEventListener('pointerleave', cancel);
-                    info.el.addEventListener('touchend', cancel);
-                    info.el.addEventListener('touchcancel', cancel);
+                    // 長押しロジック削除（クリックで編集モーダル表示に統一）
+                            {/* 発売日編集モーダル（TicketSaleForm） */}
+                            {editTicketModal !== null && (
+                                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 3000 }} onClick={()=>setEditTicketModal(null)}>
+                                    <div style={{ background: '#fff', padding: 20, borderRadius: 12, width: '90%', maxWidth: 420 }} onClick={e=>e.stopPropagation()}>
+                                        <h3 style={{ marginTop: 0 }}>発売日編集</h3>
+                                        <TicketSaleForm
+                                            saleDate={editModalSaleDate}
+                                            setSaleDate={setEditModalSaleDate}
+                                            filterGameDate={filterGameDate}
+                                            setFilterGameDate={setFilterGameDate}
+                                            events={events}
+                                            selectedGameIds={editModalGameIds}
+                                            setSelectedGameIds={setEditModalGameIds}
+                                            memo={editTicketModal.memo}
+                                            setMemo={v => setEditTicketModal({ ...editTicketModal, memo: v })}
+                                            isEdit={true}
+                                        />
+                                        <div style={{ display: 'flex', gap: 8 }}>
+                                            <button className="primary-btn" onClick={() => {
+                                                // 保存
+                                                const updated = ticketSales.map(t => t.id === editTicketModal.id ? {
+                                                    ...editTicketModal,
+                                                    saleDate: editModalSaleDate,
+                                                    games: Array.from(editModalGameIds)
+                                                } : t);
+                                                setTicketSales(updated);
+                                                localStorage.setItem(STORAGE_KEY_TICKETS, JSON.stringify(updated));
+                                                setEditTicketModal(null);
+                                            }}>保存</button>
+                                            <button onClick={()=>setEditTicketModal(null)} style={{ background: '#f5f5f5', border: '1px solid #ddd', borderRadius: 8, padding: '8px 10px', width: '100%' }}>キャンセル</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                 }}
                 dayCellContent={(args) => args.dayNumberText.replace("日", "")}
             />

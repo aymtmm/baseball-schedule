@@ -1,3 +1,119 @@
+/* ===== スマホ向けUI強化 ===== */
+@media (max-width: 600px) {
+  .page-container {
+    padding: 8px;
+    max-width: 100vw;
+  }
+  .page-title {
+    font-size: 1.3rem;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .filter-row {
+    flex-direction: column;
+    gap: 8px;
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+  .team-select {
+    font-size: 1rem;
+    padding: 8px;
+    width: 100%;
+    border-radius: 8px;
+  }
+  .ticket-card {
+    padding: 16px 10px;
+    font-size: 1rem;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .ticket-card-title {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+  .ticket-card-meta {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+  .ticket-delete-btn {
+    font-size: 1rem;
+    padding: 10px 12px;
+    border-radius: 10px;
+    width: 100%;
+    margin-top: 8px;
+  }
+  .fc-toolbar-title {
+    font-size: 1.1rem !important;
+    text-align: center;
+  }
+  .fc-daygrid-day-number {
+    font-size: 1rem !important;
+    padding: 2px 0;
+  }
+  .fc-event {
+    font-size: 1rem !important;
+    min-height: 32px;
+    border-radius: 10px !important;
+    padding: 4px 2px !important;
+  }
+  .fc-daygrid-event-harness {
+    margin-bottom: 4px !important;
+  }
+  .fc-daygrid-day {
+    min-height: 60px;
+  }
+  .fc-header-toolbar {
+    flex-direction: column !important;
+    gap: 6px;
+  }
+  .fc-toolbar-chunk {
+    width: 100%;
+    justify-content: center;
+    display: flex;
+  }
+  .fc-button {
+    font-size: 1rem !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+  }
+  /* モーダル */
+  .modal {
+    width: 98vw !important;
+    max-width: 420px;
+    padding: 18px 8px !important;
+    border-radius: 16px !important;
+  }
+  .primary-btn {
+    font-size: 1.1rem;
+    padding: 12px 0;
+    border-radius: 10px;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  /* 下部ナビバー */
+  .bottom-nav {
+    height: 60px;
+    font-size: 1.1rem;
+    border-top: 1px solid #ccc;
+    background: #f8f8f8;
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    z-index: 1000;
+  }
+  .bottom-nav button {
+    flex: 1 1 0%;
+    font-weight: bold;
+    background: #e3f2fd;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 10px 0;
+  }
+}
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -267,9 +383,7 @@ button {
 }
 
 /* Modal tweaks */
-.page-container > div[style] {
-  /* preserve modal inner styles; keep them responsive */
-}
+
 
 @media (max-width: 600px) {
   #root { padding: 12px; }
